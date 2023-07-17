@@ -21,6 +21,7 @@ export const createWsServer = (port: number): void => {
 
           if (!user) {
             userNotFound(ws, body, db)
+            updateRoom(db)
             break;
           }
 
