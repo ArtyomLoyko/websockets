@@ -9,6 +9,8 @@ export const addShips = (ws: WebSocket, body: AddShipsBodyI, db: DB) => {
   game.users[body.indexPlayer].ships = body.ships
 
   if (game.users.every(u => u.ships)) {
+    const secondUserId = body.indexPlayer === 1 ? 0 : 1
+    const secondUserWs = db.findUserKeyByIndex(secondUserId)
     const response = toResponse<StartGameResponseI>(
       RESPONSE_TYPES.START_GAME, 
       {
@@ -17,5 +19,6 @@ export const addShips = (ws: WebSocket, body: AddShipsBodyI, db: DB) => {
       }
     )
     ws.send(response)
+    if (secondUserWs) secondUserWs.send(response)
   }
 }
