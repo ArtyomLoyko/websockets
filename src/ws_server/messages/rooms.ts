@@ -4,13 +4,16 @@ import { RESPONSE_TYPES } from './../constants'
 import { toResponse } from './../utils'
 import { UpdateRoomResponseI, CreateGameResponseI, AddUserToRoomBodyI } from './../types'
 
-export const updateRoom = (ws: WebSocket, db: DB) => {
-  const rooms = Object.values(db.rooms).map(r => ({ roomId: r.id, roomUsers: r.users }))
-  const updateRoomResponse = toResponse<UpdateRoomResponseI>(
-    RESPONSE_TYPES.UPDATE_ROOM, 
-    rooms
-  )
-  ws.send(updateRoomResponse)
+export const updateRoom = (db: DB) => {
+  Array.from(db.users.keys()).forEach(userWs => {
+    const rooms = Object.values(db.rooms)
+      .map(r => ({ roomId: r.id, roomUsers: r.users }))
+    const response = toResponse<UpdateRoomResponseI>(
+      RESPONSE_TYPES.UPDATE_ROOM, 
+      rooms
+    )
+    userWs.send(response)
+  })
 }
 
 export const createRoom = (ws: WebSocket, db: DB) => {

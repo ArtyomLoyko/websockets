@@ -30,17 +30,17 @@ export const createWsServer = (port: number): void => {
           }
 
           successLogin(ws, user)
-          updateRoom(ws, db)
+          updateRoom(db)
           break;
         }
         case RESPONSE_TYPES.CREATE_ROOM: {
           createRoom(ws, db);
-          updateRoom(ws, db);
+          updateRoom(db);
           break;
         }
         case RESPONSE_TYPES.ADD_USER_TO_ROOM: {
           addUserToRoom(ws, body, db);
-          updateRoom(ws, db);
+          updateRoom(db);
           break;
         }
         case RESPONSE_TYPES.ADD_SHIPS: {
