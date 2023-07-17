@@ -28,19 +28,18 @@ export const addUserToRoom = (ws: WebSocket, body: AddUserToRoomBodyI, db: DB) =
   const roomId = body.indexRoom
   const room = db.rooms[roomId]
   const [{ index: firstUserId }] = room.users
-  const firstUserWs = db.findUserKeyByIndex(firstUserId)
   const secondUser = db.users.get(ws)
 
-  const gameId = Object.keys(db.games).length
+  if (!secondUser) return
+  if (firstUserId === secondUser.index) return
 
-  if (secondUser) {
-    db.games[gameId] = {
-      id: gameId, 
-      users: [
-      { userId: firstUserId },
-      { userId: secondUser.index}
-    ]}
-  }
+  const gameId = Object.keys(db.games).length
+  db.games[gameId] = {
+    id: gameId, 
+    users: [
+    { userId: firstUserId },
+    { userId: secondUser.index}
+  ]}
 
   const firstUserResponse = toResponse<CreateGameResponseI>(
     RESPONSE_TYPES.CREATE_GAME,
@@ -51,9 +50,8 @@ export const addUserToRoom = (ws: WebSocket, body: AddUserToRoomBodyI, db: DB) =
     { idGame: gameId, idPlayer: 1 }
   )
 
-  if (firstUserWs) {
-    firstUserWs.send(firstUserResponse)
-  }
+  const firstUserWs = db.findUserKeyByIndex(firstUserId)
+  if (firstUserWs) firstUserWs.send(firstUserResponse)
   ws.send(secondUserResponse)
 
   delete db.rooms[roomId];
