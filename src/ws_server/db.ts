@@ -1,7 +1,7 @@
 import { WebSocket } from 'ws';
 import { UserI, RoomI, GameI } from './types'
 
-class DB {
+export class DB {
   users: Map<WebSocket, UserI>;
   rooms: Record<number, RoomI>;
   games: Record<number, GameI>;
