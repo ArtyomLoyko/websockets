@@ -4,6 +4,7 @@ import { RESPONSE_TYPES } from './constants'
 import { parseRawData } from './utils'
 import { updateRoom, createRoom, addUserToRoom } from './messages/rooms'
 import { userNotFound, invalidPassword, successLogin } from './messages/users'
+import { addShips } from './messages/ships'
 
 export const createWsServer = (port: number): void => {
   const wss = new WebSocketServer({ port })
@@ -12,8 +13,6 @@ export const createWsServer = (port: number): void => {
     ws.on('error', console.error)
 
     ws.on('message', (rawData: RawData) => {
-      console.log('received: %s', rawData)
-
       const { type, body } = parseRawData<any>(rawData)
 
       switch (type) {
@@ -22,17 +21,17 @@ export const createWsServer = (port: number): void => {
 
           if (!user) {
             userNotFound(ws, body, db)
-            break
+            break;
           }
 
           if (user && user.password !== body.password) {
             invalidPassword(ws, user)
-            break
+            break;
           }
 
           successLogin(ws, user)
           updateRoom(ws, db)
-          break
+          break;
         }
         case RESPONSE_TYPES.CREATE_ROOM: {
           createRoom(ws, db);
@@ -42,6 +41,10 @@ export const createWsServer = (port: number): void => {
         case RESPONSE_TYPES.ADD_USER_TO_ROOM: {
           addUserToRoom(ws, body, db);
           updateRoom(ws, db);
+          break;
+        }
+        case RESPONSE_TYPES.ADD_SHIPS: {
+          addShips(ws, body, db);
           break;
         }
       }

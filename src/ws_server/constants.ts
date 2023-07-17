@@ -8,7 +8,8 @@ export enum RESPONSE_TYPES {
   ATTACK = 'attack',
   FINISH = 'finish',
   UPDATE_ROOM = 'update_room',
-  UPDATE_WINNERS = 'update_winners'
+  UPDATE_WINNERS = 'update_winners',
+  ADD_SHIPS = 'add_ships'
 }
 
 export enum ERROR_MESSAGES {

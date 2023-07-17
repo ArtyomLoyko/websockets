@@ -12,8 +12,8 @@ export interface RoomI {
 export interface GameI {
   id: number
   users: [
-    { userId: number },
-    { userId: number },
+    { userId: number, ships?: ShipI[] },
+    { userId: number, ships?: ShipI[] },
   ]
 }
 
@@ -45,3 +45,30 @@ export interface CreateGameResponseI {
 }
 
 export type UpdateRoomResponseI = { roomId: number, roomUsers: { name: string, index: number }[] }[]
+
+export interface Position {
+  x: number,
+  y: number
+}
+
+export type ShipTypes = "small"|"medium"|"large"|"huge"
+
+export type AttackStatus = "miss"|"killed"|"shot"
+
+export interface ShipI {
+  position: Position,
+  direction: boolean,
+  length: number,
+  type: ShipTypes
+}
+
+export interface AddShipsBodyI {
+  gameId: number,
+  indexPlayer: number,
+  ships: ShipI[]
+}
+
+export interface StartGameResponseI {
+  currentPlayerIndex: number,
+  ships: ShipI[]
+}
