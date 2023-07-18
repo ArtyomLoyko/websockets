@@ -19,6 +19,7 @@ export const createWsServer = (port: number): void => {
     ws.on('error', console.error)
 
     ws.on('message', (rawData: RawData) => {
+      console.log('received: %s', rawData)
       const parsedData = parseRawData(rawData)
 
       switch (parsedData.type) {
