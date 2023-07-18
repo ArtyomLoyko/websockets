@@ -1,4 +1,5 @@
 import { RawData } from "ws"
+import { BodyData } from './types'
 
 export const toResponse = <DataType>(type: string, data: DataType): string => JSON.stringify({
   type,
@@ -6,7 +7,7 @@ export const toResponse = <DataType>(type: string, data: DataType): string => JS
   id: 0
 })
 
-export const parseRawData = <DataType>(rawData: RawData): { type: string, body: DataType }  => {
+export const parseRawData = (rawData: RawData): { type: string, body: BodyData }  => {
   const parsedRawData = JSON.parse(rawData.toString())
   return {
     type: parsedRawData.type,

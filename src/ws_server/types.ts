@@ -17,11 +17,7 @@ export interface GameI {
   ]
 }
 
-export interface ResponseI {
-  type: string
-  data: string
-  id: number
-}
+export type BodyData = string | RegBodyI | AddUserToRoomBodyI | AddShipsBodyI
 
 export interface RegBodyI {
   name: string
