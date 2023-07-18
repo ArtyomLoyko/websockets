@@ -3,9 +3,14 @@ import { db } from './db'
 import { RESPONSE_TYPES } from './constants'
 import { parseRawData } from './utils'
 import { RegBodyI, AddUserToRoomBodyI, AddShipsBodyI } from './types'
-import { updateRoom, createRoom, addUserToRoom } from './messages/rooms'
-import { userNotFound, invalidPassword, successLogin, updateWinners } from './messages/users'
-import { addShips } from './messages/ships'
+import { updateRoom, createRoom, addUserToRoom } from './handlers/rooms'
+import {
+  userNotFound,
+  invalidPassword,
+  successLogin,
+  updateWinners,
+} from './handlers/users'
+import { addShips } from './handlers/ships'
 
 export const createWsServer = (port: number): void => {
   const wss = new WebSocketServer({ port })
@@ -25,34 +30,34 @@ export const createWsServer = (port: number): void => {
             userNotFound(ws, body, db)
             updateRoom(db)
             updateWinners(db)
-            break;
+            break
           }
 
           if (user && user.password !== body.password) {
             invalidPassword(ws, user)
-            break;
+            break
           }
 
           successLogin(ws, user)
           updateRoom(db)
           updateWinners(db)
-          break;
+          break
         }
         case RESPONSE_TYPES.CREATE_ROOM: {
-          createRoom(ws, db);
-          updateRoom(db);
-          break;
+          createRoom(ws, db)
+          updateRoom(db)
+          break
         }
         case RESPONSE_TYPES.ADD_USER_TO_ROOM: {
           const body = parsedData.body as AddUserToRoomBodyI
-          addUserToRoom(ws, body, db);
-          updateRoom(db);
-          break;
+          addUserToRoom(ws, body, db)
+          updateRoom(db)
+          break
         }
         case RESPONSE_TYPES.ADD_SHIPS: {
           const body = parsedData.body as AddShipsBodyI
-          addShips(ws, body, db);
-          break;
+          addShips(ws, body, db)
+          break
         }
       }
     })

@@ -1,18 +1,24 @@
-import { WebSocket } from 'ws';
+import { WebSocket } from 'ws'
 import { DB } from '../db'
-import { RESPONSE_TYPES } from './../constants'
-import { toResponse } from './../utils'
-import { UpdateRoomResponseI, CreateGameResponseI, AddUserToRoomBodyI } from './../types'
+import { RESPONSE_TYPES } from '../constants'
+import { toResponse } from '../utils'
+import {
+  UpdateRoomResponseI,
+  CreateGameResponseI,
+  AddUserToRoomBodyI,
+} from '../types'
 
 export const updateRoom = (db: DB) => {
-  const rooms = Object.values(db.rooms)
-    .map(r => ({ roomId: r.id, roomUsers: r.users }))
+  const rooms = Object.values(db.rooms).map((r) => ({
+    roomId: r.id,
+    roomUsers: r.users,
+  }))
   const response = toResponse<UpdateRoomResponseI>(
-    RESPONSE_TYPES.UPDATE_ROOM, 
+    RESPONSE_TYPES.UPDATE_ROOM,
     rooms
   )
-  
-  db.usersKeys.forEach(userWs => {
+
+  db.usersKeys.forEach((userWs) => {
     userWs.send(response)
   })
 }
@@ -28,7 +34,11 @@ export const createRoom = (ws: WebSocket, db: DB) => {
   }
 }
 
-export const addUserToRoom = (ws: WebSocket, body: AddUserToRoomBodyI, db: DB) => {
+export const addUserToRoom = (
+  ws: WebSocket,
+  body: AddUserToRoomBodyI,
+  db: DB
+) => {
   const roomId = body.indexRoom
   const room = db.rooms[roomId]
   const [{ index: firstUserId }] = room.users
@@ -39,11 +49,9 @@ export const addUserToRoom = (ws: WebSocket, body: AddUserToRoomBodyI, db: DB) =
 
   const gameId = Object.keys(db.games).length
   db.games[gameId] = {
-    id: gameId, 
-    users: [
-    { userId: firstUserId },
-    { userId: secondUser.index}
-  ]}
+    id: gameId,
+    users: [{ userId: firstUserId }, { userId: secondUser.index }],
+  }
 
   const firstUserResponse = toResponse<CreateGameResponseI>(
     RESPONSE_TYPES.CREATE_GAME,
@@ -58,5 +66,5 @@ export const addUserToRoom = (ws: WebSocket, body: AddUserToRoomBodyI, db: DB) =
   if (firstUserWs) firstUserWs.send(firstUserResponse)
   ws.send(secondUserResponse)
 
-  delete db.rooms[roomId];
+  delete db.rooms[roomId]
 }
