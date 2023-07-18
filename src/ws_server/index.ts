@@ -4,7 +4,7 @@ import { RESPONSE_TYPES } from './constants'
 import { parseRawData } from './utils'
 import { RegBodyI, AddUserToRoomBodyI, AddShipsBodyI } from './types'
 import { updateRoom, createRoom, addUserToRoom } from './messages/rooms'
-import { userNotFound, invalidPassword, successLogin } from './messages/users'
+import { userNotFound, invalidPassword, successLogin, updateWinners } from './messages/users'
 import { addShips } from './messages/ships'
 
 export const createWsServer = (port: number): void => {
@@ -24,6 +24,7 @@ export const createWsServer = (port: number): void => {
           if (!user) {
             userNotFound(ws, body, db)
             updateRoom(db)
+            updateWinners(db)
             break;
           }
 
@@ -34,6 +35,7 @@ export const createWsServer = (port: number): void => {
 
           successLogin(ws, user)
           updateRoom(db)
+          updateWinners(db)
           break;
         }
         case RESPONSE_TYPES.CREATE_ROOM: {

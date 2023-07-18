@@ -5,13 +5,14 @@ import { toResponse } from './../utils'
 import { UpdateRoomResponseI, CreateGameResponseI, AddUserToRoomBodyI } from './../types'
 
 export const updateRoom = (db: DB) => {
-  Array.from(db.users.keys()).forEach(userWs => {
-    const rooms = Object.values(db.rooms)
-      .map(r => ({ roomId: r.id, roomUsers: r.users }))
-    const response = toResponse<UpdateRoomResponseI>(
-      RESPONSE_TYPES.UPDATE_ROOM, 
-      rooms
-    )
+  const rooms = Object.values(db.rooms)
+    .map(r => ({ roomId: r.id, roomUsers: r.users }))
+  const response = toResponse<UpdateRoomResponseI>(
+    RESPONSE_TYPES.UPDATE_ROOM, 
+    rooms
+  )
+  
+  db.usersKeys.forEach(userWs => {
     userWs.send(response)
   })
 }

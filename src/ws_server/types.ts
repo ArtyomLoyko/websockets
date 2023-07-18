@@ -1,7 +1,8 @@
 export interface UserI {
   index: number
   name: string
-  password: string
+  password: string,
+  wins: number
 }
 
 export interface RoomI {
@@ -30,6 +31,11 @@ export interface RegResponseI {
   error: boolean
   errorText: string
 }
+
+export type UpdateWinnersResponseI = {
+  name: string
+  wins: number
+}[]
 
 export interface AddUserToRoomBodyI {
   indexRoom: number

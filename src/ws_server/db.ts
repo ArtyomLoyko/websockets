@@ -21,6 +21,14 @@ export class DB {
     }
     return result
   }
+
+  get usersKeys(): WebSocket[] {
+    return Array.from(this.users.keys())
+  }
+
+  get usersValues(): UserI[] {
+    return Array.from(this.users.values())
+  }
 }
 
 export const db = new DB();
